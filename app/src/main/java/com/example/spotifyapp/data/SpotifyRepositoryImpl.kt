@@ -89,11 +89,11 @@ class SpotifyRepositoryImpl @Inject constructor(
     }
 
     override fun getRecommendedTracks(
-        seedTracks: String, token: String, danceability: Float,
+        seedArtists : String, seedTracks: String, token: String, danceability: Float,
         energy: Float, valence: Float
     ): Flow<NetworkResponse<RecommendResponse>> {
         return callbackFlow {
-            val response = api.getRecommendedTracks(token,seedTracks,danceability,energy,valence)
+            val response = api.getRecommendedTracks(token,seedArtists,seedTracks,danceability,energy,valence)
             trySend(NetworkResponse.Loading)
             response.enqueue(object : Callback<RecommendResponse>{
                 override fun onResponse(

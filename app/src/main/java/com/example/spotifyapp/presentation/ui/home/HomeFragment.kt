@@ -1,34 +1,23 @@
 package com.example.spotifyapp.presentation.ui.home
 
-import android.content.Context
 import android.os.Bundle
-import android.provider.MediaStore.Audio.Artists
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.SeekBar
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
-import com.example.spotifyapp.R
 import com.example.spotifyapp.base.BaseFragment
 import com.example.spotifyapp.databinding.FragmentHomeBinding
 import com.example.spotifyapp.presentation.SharedViewModel
-import com.example.spotifyapp.presentation.adapter.RecommendedAdapter
-import com.example.spotifyapp.presentation.ui.home.adapter.ArtistsAdapter
-import com.spotify.sdk.android.auth.AuthorizationClient
-import com.spotify.sdk.android.auth.AuthorizationResponse
+import com.example.spotifyapp.presentation.ui.home.adapter.SearchAdapter
+import com.example.spotifyapp.presentation.ui.home.adapter.SelectedAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
@@ -36,8 +25,16 @@ import kotlinx.coroutines.launch
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
     private val viewModel : HomeViewModel by viewModels()
     private val sharedViewModel : SharedViewModel by activityViewModels()
-    private val artistAdapter : ArtistsAdapter = ArtistsAdapter()
-    private val tracksAdapter : ArtistsAdapter = ArtistsAdapter()
+    private val artistAdapter : SearchAdapter = SearchAdapter(){
+        viewModel.selectItem(it)
+    }
+    private val tracksAdapter : SearchAdapter = SearchAdapter(){
+        viewModel.selectItem(it)
+    }
+
+    private val selectedAdapter : SelectedAdapter = SelectedAdapter(){
+        viewModel.unselectItem(it)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -51,6 +48,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModel.searchTracks.collect(){
                     tracksAdapter.submitList(it)
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.selectedItems.collect(){
+                    selectedAdapter.submitList(it)
                 }
             }
         }
@@ -92,11 +96,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
 
             buttonGetRec.setOnClickListener{
-
+                viewModel.getRecommendedItems(sharedViewModel.token.value,happyCount.text.toString().toFloat(),
+                    danceableCount.text.toString().toFloat(),
+                    energeticCount.text.toString().toFloat())
             }
         }
         setupArtistRecycler()
         setupTracksRecycler()
+        setupSelectedAdapter()
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -111,6 +118,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         val tracksRecycler = binding.tracksRecycler
         tracksRecycler.layoutManager = LinearLayoutManager(requireContext(), VERTICAL,false)
         tracksRecycler.adapter = tracksAdapter
+    }
+
+    fun setupSelectedAdapter(){
+        val selectedRecycler = binding.selectedItemRecycler
+        selectedRecycler.layoutManager = LinearLayoutManager(requireContext(), HORIZONTAL,false)
+        selectedRecycler.adapter = selectedAdapter
     }
 
 }

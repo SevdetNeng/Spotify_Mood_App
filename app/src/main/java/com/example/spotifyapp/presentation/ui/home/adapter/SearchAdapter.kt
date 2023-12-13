@@ -9,10 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyapp.databinding.SearchRecyclerRowBinding
 import com.example.spotifyapp.domain.model.local.SearchItem
-import com.example.spotifyapp.domain.model.search.ArtistItem
-import okhttp3.internal.wait
 
-class ArtistsAdapter : ListAdapter<SearchItem,ArtistsAdapter.ViewHolder>(ArtistsDiffCallback()) {
+class SearchAdapter(private val onClick : (SearchItem) -> Unit) : ListAdapter<SearchItem,SearchAdapter.ViewHolder>(ArtistsDiffCallback()) {
     inner class ViewHolder(val binding : SearchRecyclerRowBinding,val context : Context) : RecyclerView.ViewHolder(binding.root){
         fun bind(item : SearchItem){
             binding.apply {
@@ -20,6 +18,9 @@ class ArtistsAdapter : ListAdapter<SearchItem,ArtistsAdapter.ViewHolder>(Artists
                     Glide.with(context).load(item.imgUrl).into(binding.itemImageView)
                 }
                 titleText.text = item.title
+                root.setOnClickListener {
+                    onClick(item)
+                }
             }
         }
     }

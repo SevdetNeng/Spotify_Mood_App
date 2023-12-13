@@ -39,10 +39,11 @@ class SplashFragment : Fragment() {
                 sharedViewModel.isLoggedIn.collect(){
                     if(it){
                         val token = requireActivity().getSharedPreferences("Token",Context.MODE_PRIVATE).getString("token","")
+                        findNavController().navigate(R.id.homeFragment)
                         if (token != null) {
                             println("token  is "+token)
-                            sharedViewModel.getTopTracks()
-                            sharedViewModel.getTopArtists()
+                            //sharedViewModel.getTopTracks()
+                            //sharedViewModel.getTopArtists()
                         }
                     }
                 }

@@ -12,7 +12,9 @@ import com.example.spotifyapp.data.usecase.GetTopItemsUseCase
 import com.example.spotifyapp.data.usecase.GetUserUseCase
 import com.example.spotifyapp.data.usecase.SearchArtistsUseCase
 import com.example.spotifyapp.data.usecase.SearchTracksUseCase
+import com.example.spotifyapp.domain.model.local.NetworkResponse
 import com.example.spotifyapp.domain.model.local.SearchItem
+import com.example.spotifyapp.domain.model.recommend.Track
 import com.example.spotifyapp.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +22,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.example.spotifyapp.util.Mapper
+import com.example.spotifyapp.util.SearchType
+import kotlinx.coroutines.flow.collect
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -36,33 +40,16 @@ class HomeViewModel @Inject constructor(
     private val _searchedTracks : MutableStateFlow<List<SearchItem>> = MutableStateFlow(emptyList())
     val searchTracks : StateFlow<List<SearchItem>> = _searchedTracks
 
-    fun connectToSpotify(context: Context) {
-        repo.connectToSpotify(context)
-    }
+    private val _selectedItems : MutableStateFlow<MutableList<SearchItem>> = MutableStateFlow(
+        mutableListOf()
+    )
+    val selectedItems : StateFlow<MutableList<SearchItem>> = _selectedItems
+
+    private val _recommendedTracks : MutableStateFlow<List<Track>> = MutableStateFlow(emptyList())
+    val recommendedTracks : StateFlow<List<Track>> = _recommendedTracks
 
     fun authorizeUser(activity: Activity) {
         repo.authorizeUser(activity)
-    }
-
-    fun getUser(token: String) {
-        viewModelScope.launch {
-            getUserUseCase.invoke(token).collect {
-                when (it.status) {
-                    ResponseStatus.LOADING -> {
-
-                    }
-
-                    ResponseStatus.SUCCESS -> {
-                        println(it.data)
-                    }
-
-                    else -> {
-
-                    }
-                }
-            }
-        }
-
     }
 
     fun searchArtists(token : String,query : String){
@@ -113,24 +100,65 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getTopItems(token: String) {
+    fun selectItem(item : SearchItem){
+        if(_selectedItems.value.size<5){
+            val copyList = _selectedItems.value.toMutableList()
+            copyList.add(item)
+            _selectedItems.value = copyList
+
+        }
+    }
+
+    fun unselectItem(item : SearchItem){
+        val copyList = _selectedItems.value.toMutableList()
+        copyList.remove(item)
+        _selectedItems.value = copyList
+    }
+
+    fun getArtistSeeds() : String {
+        val artists = selectedItems.value.filter {
+            it.type == SearchType.ARTIST
+        }
+        val ids = mutableListOf<String>()
+        artists.forEach {
+            ids.add(it.id)
+        }
+        return ids.joinToString(",")
+    }
+    fun getTrackSeeds() : String {
+        val tracks = selectedItems.value.filter {
+            it.type == SearchType.TRACK
+        }
+        val ids = mutableListOf<String>()
+        tracks.forEach {
+            ids.add(it.id)
+        }
+        return ids.joinToString(",")
+    }
+
+    fun getRecommendedItems(token : String,valence : Float,energy : Float,
+                            danceability : Float){
         viewModelScope.launch {
-            getTopItemsUseCase.invoke(token, "tracks", 10, Constants.TimeRanges.long_term.name)
-                .collect() {
-                    when (it.status) {
-                        ResponseStatus.SUCCESS -> {
-                            println(it.data)
-                        }
+            val artists = getArtistSeeds()
+            val tracks = getTrackSeeds()
+            getRecommendedTracksUseCase.invoke(artists, tracks, token, danceability, energy, valence).collect(){ response ->
 
-                        ResponseStatus.LOADING -> {
-
-                        }
-
-                        else -> {
-                            Log.e("Top Error", it.message.toString())
+                when(response.status) {
+                    ResponseStatus.LOADING -> {
+                        //loading
+                    }
+                    ResponseStatus.SUCCESS -> {
+                        val body = response.data
+                        body?.let {
+                            _recommendedTracks.value = it.tracks
                         }
                     }
+                    else -> {
+                        //error
+                    }
                 }
+
+            }
         }
     }
 }

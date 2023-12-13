@@ -30,7 +30,8 @@ interface SpotifyApi {
     @GET("recommendations")
     fun getRecommendedTracks(
         @Header("Authorization") token: String,
-        @Query("seed_tracks") seedArtists: String,
+        @Query("seed_artists") seedArtists: String,
+        @Query("seed_tracks") seedTracks: String,
         @Query("target_danceability") danceability: Float,
         @Query("target_energy") energy: Float,
         @Query("target_valence") valence: Float

@@ -19,7 +19,7 @@ interface SpotifyRepository  {
 
     fun getTopItems(token : String,type : String,limit : Int,timeRange : String) : Flow<NetworkResponse<TopItems>>
 
-    fun getRecommendedTracks(seedTracks : String,token: String,danceability : Float,energy : Float,valence : Float) : Flow<NetworkResponse<RecommendResponse>>
+    fun getRecommendedTracks(seedArtists : String, seedTracks : String,token: String,danceability : Float,energy : Float,valence : Float) : Flow<NetworkResponse<RecommendResponse>>
 
     fun searchArtists(token : String, query : String) : Flow<NetworkResponse<SearchArtist>>
 

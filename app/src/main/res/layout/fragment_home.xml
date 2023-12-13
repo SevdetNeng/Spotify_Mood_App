@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.ui.home.HomeFragment">
+
+    <SeekBar
+        android:id="@+id/happySeekbar"
+        android:layout_width="151dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toStartOf="@+id/happyCount"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/happyText"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/danceableSeekbar"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/danceableCount"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/danceText"
+        app:layout_constraintTop_toBottomOf="@+id/happySeekbar" />
+
+    <TextView
+        android:id="@+id/happyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="How happy you are?"
+        app:layout_constraintBottom_toBottomOf="@+id/happySeekbar"
+        app:layout_constraintEnd_toStartOf="@+id/happySeekbar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/happySeekbar"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/danceText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="How danceable songs should be?"
+        app:layout_constraintBottom_toBottomOf="@+id/danceableSeekbar"
+        app:layout_constraintEnd_toStartOf="@+id/danceableSeekbar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/danceableSeekbar" />
+
+    <SeekBar
+        android:id="@+id/energeticSeekbar"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/energeticCount"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/energeticText"
+        app:layout_constraintTop_toBottomOf="@+id/danceableSeekbar" />
+
+    <TextView
+        android:id="@+id/energeticText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="How energetic you feel?"
+        app:layout_constraintBottom_toBottomOf="@+id/energeticSeekbar"
+        app:layout_constraintEnd_toStartOf="@+id/energeticSeekbar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/energeticSeekbar" />
+
+    <TextView
+        android:id="@+id/happyCount"
+        android:layout_width="25dp"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/happySeekbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/happySeekbar"
+        app:layout_constraintTop_toTopOf="@+id/happySeekbar" />
+
+    <TextView
+        android:id="@+id/danceableCount"
+        android:layout_width="25dp"
+        android:layout_height="wrap_content"
+        android:width="25dp"
+        android:text="100"
+        app:layout_constraintBottom_toBottomOf="@+id/danceableSeekbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/danceableSeekbar"
+        app:layout_constraintTop_toTopOf="@+id/danceableSeekbar" />
+
+    <TextView
+        android:id="@+id/energeticCount"
+        android:layout_width="25dp"
+        android:layout_height="wrap_content"
+        android:text="100"
+        app:layout_constraintBottom_toBottomOf="@+id/energeticSeekbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/energeticSeekbar"
+        app:layout_constraintTop_toTopOf="@+id/energeticSeekbar" />
+
+    <Button
+        android:id="@+id/buttonGetRec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="Get Recommendations"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/selectedItemRecycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/searchBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/energeticSeekbar" />
+
+    <EditText
+        android:id="@+id/searchBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="48dp"
+        android:ems="10"
+        android:hint="Search for an artist or track"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/energeticSeekbar" />
+
+    <TextView
+        android:id="@+id/artistsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Artists"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchBar" />
+
+    <TextView
+        android:id="@+id/tracksText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Tracks"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/artistsRecycler" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/artistsRecycler"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/artistsText" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tracksRecycler"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tracksText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
